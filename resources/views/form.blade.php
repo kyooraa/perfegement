@@ -280,7 +280,7 @@
                         confirmButtonText: "Yes, submit it!"
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            form.submit(); // Submit the form
+                            form.submit();
                             Swal.fire({
                                 title: "Submitted!",
                                 text: "Your form has been submitted.",
