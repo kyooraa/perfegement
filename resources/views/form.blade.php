@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -148,10 +148,9 @@
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <!-- Breadcrumb -->
                 <nav aria-label="breadcrumb" class="mt-3">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Forms</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">@yield('breadcrumb', 'Current Page')</li>
+                    <ol class="breadcrumb text-muted fs-6 fw-semibold">
+                        <li class="breadcrumb-item"><a href="https://jagooit.com/index.html" class="">Home</a></li>
+                        <li class="breadcrumb-item text-muted">Report</li>
                     </ol>
                 </nav>
 
@@ -259,6 +258,15 @@
                 if (!form.checkValidity()) {
                     event.preventDefault();
                     event.stopPropagation();
+                    Swal.fire({
+                    text: "Your data is incorrect!",
+                    icon: "error",
+                    buttonsStyling: false,
+                    confirmButtonText: "Back",
+                    customClass: {
+                        confirmButton: "btn btn-secondary"
+                    }
+    });
                 } else {
                     event.preventDefault(); // Prevent default form submission
 
