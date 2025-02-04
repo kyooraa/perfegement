@@ -8,4 +8,4 @@ Route::get('/', function () {
 });
 
 Route::get('/perfegement', [ManageController::class, 'create']);
-Route::post('/perfegement', [ManageController::class, 'store']);
+Route::post('/perfegement', [ManageController::class, 'store'])->name('perfegement.store');

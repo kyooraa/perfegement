@@ -8,28 +8,46 @@ use App\Models\Management;
 
 class ManageController extends Controller
 {
-    public function store (Request $req) {
-        $validateData = $req->validate([
-            'date' => 'required|date',
-            'status_hadir' => 'required|in:hadir,izin,sakit',
-            'jenis' => 'required|in:biasa,libur',
-            'jam_datang' => 'required|date_format:H:i',
-            'jam_pulang' => 'required|date_format:H:i',
-            'j_approval' => 'required|file|mimes:pdf,docx|max:4096',
-            'j_agenda' => 'required|file|mimes:pdf,docx|max:4096',
-        ]);
-        
-        // Menyimpan file `j_approval` dan `j_agenda` ke storage/public
-        $jApprovalPath = $req->file('j_approval')->store('public');
-        $jAgendaPath = $req->file('j_agenda')->store('public');
+    public function store(Request $req) {
+    $validateData = $req->validate([ 
+        'date' => 'required|date',
+        'jenis' => 'required|in:hadir,izin,sakit,spj,lembur,weekly_report,cuti',
+        'tipe' => 'nullable|in:kerja,libur|required_unless:jenis,weekly_report',
+        'durasi' => 'nullable|integer|required_unless:jenis,weekly_report',
+        'j_approval' => [
+            'nullable',
+            function ($attribute, $value, $fail) use ($req) {
+                // Custom validation for 'j_approval' based on 'durasi'
+                if ($req->has('durasi') && $req->durasi > 8 && !$req->hasFile('j_approval')) {
+                    $fail($attribute.' is required when durasi is greater than 8.');
+                }
+            },
+            'file',
+            'mimes:jpg,png',
+            'max:2048'
+        ],
+        'deskripsi' => 'required|string',
+        'note' => 'required|string'
+    ]);
+    
+    try {
+        // Check if the file exists before attempting to store
+        if ($req->hasFile('j_approval')) {
+            $jApprovalPath = $req->file('j_approval')->store('public');
+            $validateData['j_approval'] = $jApprovalPath; // Save the file path to the data
+        }
 
-        // Menambahkan path file ke data yang akan disimpan
-        $validateData['j_approval'] = $jApprovalPath;
-        $validateData['j_agenda'] = $jAgendaPath;
-
+        // Store the validated data in the database
         Management::create($validateData);
-        return redirect('/perfegement')->with('success', 'Data Succesfully Added');
+
+        return redirect()->back()->with('success', 'Form submitted successfully');
+    } catch (\Exception $e) {
+        // Log the error
+        \Log::error($e->getMessage());
+        return redirect()->back()->with('error', 'An error occurred while submitting the form')->withInput();
     }
+}
+
     public function create() {
         return view('form');
     }

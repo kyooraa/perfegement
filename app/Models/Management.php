@@ -14,11 +14,11 @@ class Management extends Model
     //Kolom yang dapat diisi secara massal
     protected $fillable = [
         'date',
-        'status_hadir',
         'jenis',
-        'jam_datang',
-        'jam_pulang',
+        'tipe',
         'j_approval',
-        'j_agenda',
+        'deskripsi',
+        'durasi',
+        'note'
     ];
 }
