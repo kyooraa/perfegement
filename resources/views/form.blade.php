@@ -543,7 +543,7 @@
                     $('#j_approval').val('');
                 }
             }
-                    function sakit() {
+            function sakit() {
             const isSakit = $('#jenis').val() === "sakit";
             $('#durasi').prop('disabled', isSakit);
         }
